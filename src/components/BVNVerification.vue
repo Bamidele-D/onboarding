@@ -1,0 +1,187 @@
+<template>
+    <div>
+        <div v-if="isBvnVerified">
+            <div class="w-full" v-if="isBVN">
+                <div>
+                    <h1 class="text-3xl font-bold">BVN Validation</h1>
+                    <p class="text-[#494D4F] text-sm">Validate your BVN </p>
+                </div>
+
+                <div class="mt-10">
+                    <form>
+                        <div class="flex flex-col mb-5">
+                            <label for="" class="text-sm text-[#62676A]">BVN Number</label>
+                            <input type="text" class="border border-[#B7BBBE] h-[50px] px-2.5 rounded-md"
+                                placeholder="Bank Verification Number" v-model="personalData.bvn" readonly disabled>
+                        </div>
+
+                        <div>
+                            <button class="bg-[#1C2C35] h-[60px] w-full text-white font-semibold rounded-lg"
+                                @click.prevent="sendUserBvnOtp()">{{ loading ? 'Please wait...' : 'Verify BVN'
+                                }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="w-full" v-else>
+                <div>
+                    <h1 class="text-3xl font-bold">Enter the code</h1>
+                    <p class="text-[#494D4F] text-sm">Enter the OTP code sent to your email, be careful not to share the
+                        code
+                        with anyone.</p>
+                </div>
+
+                <div class="mt-20">
+                    <form action="">
+                        <div class="flex justify-center gap-5 mb-5">
+                            <div class="my-4 flex justify-center">
+                                <v-otp-input ref="otpInput" input-classes="otp-input" separator="&nbsp;&nbsp;"
+                                    :num-inputs="6" :should-auto-focus="true" :is-input-num="true"
+                                    :conditionalClass="['one', 'two', 'three', 'four', 'five', 'six']"
+                                    :placeholder="['0', '0', '0', '0', '0', '0']" @on-change="handleOnChange"
+                                    @on-complete="handleOnComplete" />
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center">
+                            <button class="bg-[#1C2C35] h-[60px] w-[70%] text-white font-semibold rounded-lg"
+                                @click.prevent="verifyUserBvnOtp()">{{ loading ? 'Please wait...' : 'Verify Email'
+                                }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div v-else>
+            <button class="bg-[#1C2C35] h-[60px] w-[70%] text-white font-semibold rounded-lg"
+            @click.prevent="openBVNPortal()">
+            {{ loading ? 'Please wait...' : 'Verify BVN'}}
+        </button>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { ref, computed } from "vue";
+import { sendBvnOtp, verifyBVN, createCustomer } from "../services";
+const props = defineProps([
+    'personalData', 
+    'increaseIndex', 
+    'accountType', 
+    'progressIndex', 
+    'totalProgressIndex'
+]);
+
+const loading = ref(false);
+const isBVN = ref(true);
+const isBvnVerified = ref(true);
+const otp = ref("");
+
+const handleOnChange = (e) => {
+    otp.value = e;
+};
+
+const handleOnComplete = (e) => {
+    otp.value = e;
+};
+
+const sendUserBvnOtp = async () => {
+    try {
+        loading.value = true;
+        const response = await sendBvnOtp(props.personalData.bvn);
+        console.log(response);
+        loading.value = false;
+        if(response.status == 200) {
+            isBVN.value = false;
+        }
+        if(response.status == 404) {
+            isBvnVerified.value = false;
+        }
+        // if (response.status == 200) {
+        //     props.increaseIndex();
+        // }
+    } catch (err) {
+        loading.value = false;
+        console.log(err)
+    }
+}
+
+const verifyUserBvnOtp = async () => {
+    try {
+        loading.value = true;
+        const response = await verifyBVN(props.personalData.bvn, otp.value);
+        console.log(response);
+        loading.value = false;
+        if(response.status == 200) {
+            createCustomerAccount();
+        }
+        // if (response.status == 400 || response.status == 404) {
+
+        // }
+    } catch (err) {
+        loading.value = false;
+        console.log(err)
+    }
+}
+
+const createCustomerAccount = async () => {
+    try {
+        loading.value = true;
+        const response = await createCustomer(props.personalData);
+        console.log(response);
+        loading.value = false;
+        if(response.status == 200) {
+            if(props.accountType == 'personal') {
+                props.progressIndex == props.totalProgressIndex - 1;
+            }
+            if(props.accountType == 'business') {
+                props.progressIndex == props.totalProgressIndex;
+            }
+        }
+        // if (response.status == 200) {
+        //     props.increaseIndex();
+        // }
+    } catch (err) {
+        loading.value = false;
+        console.log(err)
+    }
+}
+
+const openBVNPortal = () => {
+    const newWindow = window.open('https://idsandbox.nibss-plc.com.ng/oxauth/authorize.htm?scope=contact_info&acr_values=otp&response_type=code&redirect_uri=https://thekredibank.com/&client_id=c5ba1807-b3e1-48db-88e3-4d62de81d7f7', '_blank', 'width=600,height=400');
+    if (newWindow) {
+      newWindow.focus();
+    }
+}
+</script>
+
+<style>
+.one,
+.two,
+.three,
+.four,
+.five,
+.six {
+    width: 56px;
+    height: 56px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-weight: 300;
+}
+
+@media screen and (max-width: 640px) {
+
+    .one,
+    .two,
+    .three,
+    .four,
+    .five,
+    .six {
+        width: 46px;
+        height: 46px;
+    }
+}
+</style>
