@@ -1,8 +1,8 @@
 <template>
   <div class="flex">
     <SidebarView />
-    <div class="p-36 w-[calc(100%_-_18rem)]">
-      <div class="mb-[40px]">
+    <div class="px-36 py-20 w-[calc(100%_-_18rem)] h-full overflow-y-scroll border border-red-500">
+      <div class="mb-[40px] overflow-y-scroll">
         <div class="w-full h-[4px] bg-[#F4F9FD] mb-[5px]">
           <div class="bg-[#00DE59] h-full w-full" :style="{ width: progressWidth }"></div>
         </div>
@@ -16,11 +16,10 @@
 
       <BVNVerification  :personalData="personalData" :increaseIndex="increaseIndex" :accountType="accountType" :progressIndex="progressIndex" :totalProgressIndex="totalProgressIndex" v-if="progressIndex == 3" />
 
-      <BusinessRegistration v-if="progressIndex == 4" />
+      <BusinessRegistration :personalData="personalData" :businessData="businessData" :increaseIndex="increaseIndex" v-if="progressIndex == 4" />
 
       <RegistrationCompleted v-if="progressIndex == 5" />
     </div>
-    <ContentArea />
   </div>
 </template>
 
@@ -43,10 +42,19 @@ const personalData = ref({
   first_name: "afeez",
   last_name: "dosunmu",
   phone: "08160897065",
-  email_address: "dosunmuafeez37@gmail.com",
+  email: "dosunmuafeez37@gmail.com",
   password: "password",
   bvn: "00000111111"
 });
+
+const businessData = ref({
+    organisation_name: "",
+    type_of_business: "",
+    date_of_incorporation: "",
+    country: "",
+    address: "",
+    phone_no: personalData.value.phone,
+})
 
 const progressWidth = computed(() => {
   return `${progressBarWidth.value}%`

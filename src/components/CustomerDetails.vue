@@ -32,8 +32,8 @@
                 
                 <div class="flex flex-col mb-5">
                     <label for="" class="text-sm text-[#62676A]">Email Address</label>
-                    <input type="email" class="border border-[#B7BBBE] h-[50px] px-2.5 rounded-md text-sm" placeholder="Email Address" v-model="personalData.email_address" @blur="checkUserData('email_address')">
-                    <div class="text-red-500 text-xs mt-1" v-if="validateUserDetails.errors.email_address && filledUserData.email_address">{{ validateUserDetails.errors.email_address }}</div>
+                    <input type="email" class="border border-[#B7BBBE] h-[50px] px-2.5 rounded-md text-sm" placeholder="Email Address" v-model="personalData.email" @blur="checkUserData('email')">
+                    <div class="text-red-500 text-xs mt-1" v-if="validateUserDetails.errors.email && filledUserData.email">{{ validateUserDetails.errors.email }}</div>
                 </div>
                 
                 <div class="flex flex-col mb-5">
@@ -70,7 +70,7 @@ const filledUserData = ref({
     first_name: false,
     last_name: false,
     phone: false,
-    email_address: false,
+    email: false,
     password: false,
     bvn: false
 });
@@ -92,7 +92,7 @@ function toggleShowPassword() {
 }
 
 const validateUserDetails = computed(() => {
-    const { first_name, last_name, phone, email_address, password, bvn } = props.personalData;
+    const { first_name, last_name, phone, email, password, bvn } = props.personalData;
     const errors = {};
 
     if (!first_name) {
@@ -104,8 +104,8 @@ const validateUserDetails = computed(() => {
     if (!phone) {
         errors.phone = 'Phone is required';
     }
-    if (!email_address) {
-        errors.email_address = 'Email Address is required';
+    if (!email) {
+        errors.email = 'Email Address is required';
     }
     if (!password) {
         errors.password = 'Password is required';
@@ -127,7 +127,7 @@ const checkUserData = (userData) => {
 const sendUserOTP = async () => {
     try {
         loading.value = true;
-        const response = await sendOTP(props.personalData.email_address, props.personalData.phone);
+        const response = await sendOTP(props.personalData.email, props.personalData.phone);
         console.log(response);
         loading.value = false;
         if(response.status == 200) {

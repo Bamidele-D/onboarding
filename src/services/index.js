@@ -106,3 +106,21 @@ export const createCustomer = async (userData) => {
     }
 }
 
+export const createBusiness = async (businessData) => {
+    try {
+        const response = await fetch('http://wallet-user-api.test.thekredibank.com/api/onboarding/v2/business/create', {
+            method: 'POST',
+            body: JSON.stringify(businessData),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
+                'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
+            },
+        })
+        const data = await response.json();
+        return data;
+    } catch(err) {
+        console.log(err);
+    }
+}
+

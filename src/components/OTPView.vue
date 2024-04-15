@@ -47,7 +47,7 @@ const handleOnComplete = (e) => {
 const verifyUserOTP = async () => {
     try {
         loading.value = true;
-        const response = await verifyOTP(props.personalData.email_address, props.personalData.phone, otp.value);
+        const response = await verifyOTP(props.personalData.email, props.personalData.phone, otp.value);
         console.log(response);
         loading.value = false;
         if (response.status == 200) {
