@@ -39,12 +39,12 @@ const progressIndex = ref(0);
 const totalProgressIndex = ref(5);
 const progressBarWidth = ref(0);
 const personalData = ref({
-  first_name: "afeez",
-  last_name: "dosunmu",
-  phone: "08160897065",
-  email: "dosunmuafeez37@gmail.com",
-  password: "password",
-  bvn: "00000111111"
+  first_name: "",
+  last_name: "",
+  phone: "",
+  email: "",
+  password: "",
+  bvn: ""
 });
 
 const businessData = ref({
