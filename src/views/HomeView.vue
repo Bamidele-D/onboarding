@@ -1,8 +1,8 @@
 <template>
   <div class="flex">
     <SidebarView />
-    <div class="px-36 py-20 w-[calc(100%_-_18rem)] h-full overflow-y-scroll ">
-      <div class="mb-[40px] overflow-y-scroll">
+    <div class="px-36 py-20 w-[calc(100%_-_18rem)] h-screen overflow-y-scroll ">
+      <div class="mb-[40px]">
         <div class="w-full h-[4px] bg-[#F4F9FD] mb-[5px]">
           <div class="bg-[#00DE59] h-full w-full" :style="{ width: progressWidth }"></div>
         </div>
