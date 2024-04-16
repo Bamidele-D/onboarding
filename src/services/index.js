@@ -5,7 +5,7 @@ export const sendOTP = async (email, phone) => {
         key: email
     }
     try {
-        const response = await fetch('http://wallet-user-api.test.thekredibank.com/api/onboarding/v2/otp/create', {
+        const response = await fetch('https://wallet-user-api.test.thekredibank.com/api/onboarding/v2/otp/create', {
             method: 'POST',
             body: JSON.stringify(payload),
             headers: {
@@ -29,7 +29,7 @@ export const verifyOTP = async (email, phone, otp) => {
         otp: otp
     }
     try {
-        const response = await fetch('http://wallet-user-api.test.thekredibank.com/api/onboarding/v2/otp/validate', {
+        const response = await fetch('https://wallet-user-api.test.thekredibank.com/api/onboarding/v2/otp/validate', {
             method: 'POST',
             body: JSON.stringify(payload),
             headers: {
@@ -50,7 +50,7 @@ export const sendBvnOtp = async (bvn) => {
         bvn: bvn
     }
     try {
-        const response = await fetch('http://wallet-user-api.test.thekredibank.com/api/onboarding/v2/bvn/verify', {
+        const response = await fetch('https://wallet-user-api.test.thekredibank.com/api/onboarding/v2/bvn/verify', {
             method: 'POST',
             body: JSON.stringify(payload),
             headers: {
@@ -72,7 +72,7 @@ export const verifyBVN = async (bvn, otp) => {
         otp: otp
     }
     try {
-        const response = await fetch('http://wallet-user-api.test.thekredibank.com/api/onboarding/v2/bvn/validate', {
+        const response = await fetch('https://wallet-user-api.test.thekredibank.com/api/onboarding/v2/bvn/validate', {
             method: 'POST',
             body: JSON.stringify(payload),
             headers: {
@@ -90,7 +90,7 @@ export const verifyBVN = async (bvn, otp) => {
 
 export const createCustomer = async (userData) => {
     try {
-        const response = await fetch('http://wallet-user-api.test.thekredibank.com/api/onboarding/v2/customer/create', {
+        const response = await fetch('https://wallet-user-api.test.thekredibank.com/api/onboarding/v2/customer/create', {
             method: 'POST',
             body: JSON.stringify(userData),
             headers: {
@@ -108,7 +108,7 @@ export const createCustomer = async (userData) => {
 
 export const createBusiness = async (businessData) => {
     try {
-        const response = await fetch('http://wallet-user-api.test.thekredibank.com/api/onboarding/v2/business/create', {
+        const response = await fetch('https://wallet-user-api.test.thekredibank.com/api/onboarding/v2/business/create', {
             method: 'POST',
             body: JSON.stringify(businessData),
             headers: {
