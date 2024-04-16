@@ -42,7 +42,7 @@
             </div>
         </div>
         <div>
-            <button class="bg-[#1C2C35] h-[60px] w-full text-white font-semibold rounded-lg" :disabled="accountType == ''" :class="{'bg-[#1C2C3580] cursor-not-allowed' : accountType == ''}" @click="increaseIndex()">Continue →</button>
+            <button class="h-[60px] w-full text-white font-semibold rounded-lg" :disabled="accountType == ''" :class="{'bg-[#1C2C3580] cursor-not-allowed' : accountType == '', 'bg-[#1C2C35]': accountType !== ''}" @click="increaseIndex()">Continue →</button>
         </div>
     </div>
 </template>

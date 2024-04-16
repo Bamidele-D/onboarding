@@ -6,7 +6,7 @@
                 <path d="M12 20.3389L4 12.3389M4 12.3389L12 4.33887M4 12.3389H18.5" stroke="#111111" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
                 </svg>
             </span>
-            <h1 class="text-3xl font-bold">Business Registration</h1>
+            <h1 class="text-3xl font-bold mt-4">Business Registration</h1>
             <p class="text-[#494D4F] text-sm">We want to know more about you.</p>
         </div>
 
@@ -74,7 +74,7 @@
                 <p class="text-sm text-[#62676A] text-center mt-5 mb-2">By clicking the “Create My Account” button, you agree to Kredi’s <a href="" class="font-bold underline">terms of acceptable use.</a></p>
 
                 <div>
-                    <button class="bg-[#1C2C35] h-[60px] w-full text-white font-semibold rounded-lg" :class="{'bg-[#1C2C3580] cursor-not-allowed' : !validateBusinessDetails.isValid}" @click.prevent="createBusinessAccount()">{{loading ? 'Please wait...' : 'Continue →'}}</button>
+                    <button class="h-[60px] w-full text-white font-semibold rounded-lg" :class="{'bg-[#1C2C3580] cursor-not-allowed' : !validateBusinessDetails.isValid, 'bg-[#1C2C35]': validateBusinessDetails.isValid}" :disabled="!validateBusinessDetails.isValid" @click.prevent="createBusinessAccount()">{{loading ? 'Please wait...' : 'Continue →'}}</button>
                 </div>
             </form>
         </div>
