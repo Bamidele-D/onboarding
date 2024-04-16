@@ -1,6 +1,11 @@
 <template>
     <div class="w-full">
         <div>
+            <span class="cursor-pointer" @click="decreaseIndex()">
+                <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 20.3389L4 12.3389M4 12.3389L12 4.33887M4 12.3389H18.5" stroke="#111111" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
+                </svg>
+            </span>
             <h1 class="text-3xl font-bold">Enter the code</h1>
             <p class="text-[#494D4F] text-sm">Enter the OTP code sent to your email, be careful not to share the code
                 with anyone.</p>
@@ -30,7 +35,7 @@
 import { ref } from "vue";
 import { verifyOTP } from "../services";
 const props = defineProps([
-    'personalData', 'increaseIndex'
+    'personalData', 'increaseIndex', 'decreaseIndex'
 ]);
 
 const otp = ref("");

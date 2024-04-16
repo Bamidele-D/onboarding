@@ -8,15 +8,15 @@
         </div>
         <span>{{ progressIndex }}/{{ totalProgressIndex }}</span>
       </div>
-      <GetStarted :accountType="accountType" :selectAccountType="selectAccountType" :increaseIndex="increaseIndex"  v-if="progressIndex == 0" />
+      <GetStarted :accountType="accountType" :selectAccountType="selectAccountType" :increaseIndex="increaseIndex"  v-if="progressIndex == 0" :decreaseIndex="decreaseIndex" />
 
-      <CustomerDetails :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 1" />
+      <CustomerDetails :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 1" :decreaseIndex="decreaseIndex" />
 
-      <OTPView :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 2" />
+      <OTPView :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 2" :decreaseIndex="decreaseIndex" />
 
-      <BVNVerification  :personalData="personalData" :increaseIndex="increaseIndex" :accountType="accountType" :progressIndex="progressIndex" :totalProgressIndex="totalProgressIndex" v-if="progressIndex == 3" />
+      <BVNVerification  :personalData="personalData" :increaseIndex="increaseIndex" :accountType="accountType" :progressIndex="progressIndex" :totalProgressIndex="totalProgressIndex" v-if="progressIndex == 3" :decreaseIndex="decreaseIndex" />
 
-      <BusinessRegistration :personalData="personalData" :businessData="businessData" :increaseIndex="increaseIndex" v-if="progressIndex == 4" />
+      <BusinessRegistration :personalData="personalData" :businessData="businessData" :increaseIndex="increaseIndex" v-if="progressIndex == 4" :decreaseIndex="decreaseIndex" />
 
       <RegistrationCompleted v-if="progressIndex == 5" />
     </div>
@@ -39,12 +39,12 @@ const progressIndex = ref(0);
 const totalProgressIndex = ref(5);
 const progressBarWidth = ref(0);
 const personalData = ref({
-  first_name: "",
-  last_name: "",
-  phone: "",
-  email: "",
-  password: "",
-  bvn: ""
+  first_name: "afeez",
+  last_name: "dosunmu",
+  phone: "08160897065",
+  email: "dosunmuafeez37@gmail.com",
+  password: "password",
+  bvn: "00000111111"
 });
 
 const businessData = ref({
@@ -67,5 +67,10 @@ const selectAccountType = (user) => {
 const increaseIndex = () => {
   progressIndex.value += 1;
   progressBarWidth.value += 20;
+}
+
+const decreaseIndex = () => {
+  progressIndex.value -= 1;
+  progressBarWidth.value -= 20;
 }
 </script>

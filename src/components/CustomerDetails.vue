@@ -1,6 +1,11 @@
 <template>
     <div class="w-full">
         <div>
+            <span class="cursor-pointer" @click="decreaseIndex()">
+                <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 20.3389L4 12.3389M4 12.3389L12 4.33887M4 12.3389H18.5" stroke="#111111" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
+                </svg>
+            </span>
             <h1 class="text-3xl font-bold">Customer Details</h1>
             <p class="text-[#494D4F] text-sm">We want to know more about you. </p>
         </div>
@@ -63,7 +68,7 @@
 import { ref, computed } from "vue";
 import { sendOTP } from "../services";
 const props = defineProps([
-    'personalData', 'increaseIndex'
+    'personalData', 'increaseIndex', 'decreaseIndex'
 ]);
 const showPassword = ref(false);
 const filledUserData = ref({

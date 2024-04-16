@@ -1,7 +1,7 @@
 <template>
     <div class="w-full">
         <div>
-            <h1 class="text-3xl font-bold">Let’s get you started</h1>
+            <h1 class="text-3xl font-bold mt-5">Let’s get you started</h1>
             <p class="text-[#494D4F] text-sm">We care about you and your business. </p>
         </div>
         <div class="w-full mt-10">
@@ -51,7 +51,8 @@
 const props = defineProps([
     'accountType', 
     'selectAccountType', 
-    'increaseIndex'
+    'increaseIndex',
+    'decreaseIndex'
 ]);
 </script>
 

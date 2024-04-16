@@ -3,6 +3,11 @@
         <div v-if="isBvnVerified">
             <div class="w-full" v-if="isBVN">
                 <div>
+                    <span class="cursor-pointer" @click="decreaseIndex()">
+                        <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 20.3389L4 12.3389M4 12.3389L12 4.33887M4 12.3389H18.5" stroke="#111111" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
+                        </svg>
+                    </span>
                     <h1 class="text-3xl font-bold">BVN Validation</h1>
                     <p class="text-[#494D4F] text-sm">Validate your BVN </p>
                 </div>
@@ -71,7 +76,7 @@ const props = defineProps([
     'increaseIndex', 
     'accountType', 
     'progressIndex', 
-    'totalProgressIndex'
+    'totalProgressIndex', 'decreaseIndex'
 ]);
 
 const loading = ref(false);
@@ -133,11 +138,12 @@ const createCustomerAccount = async () => {
         console.log(response);
         loading.value = false;
         if(response.status == 200) {
+            console.log(props.accountType);
             if(props.accountType == 'personal') {
-                props.progressIndex == props.totalProgressIndex - 1;
+                props.progressIndex = 5;
             }
             if(props.accountType == 'business') {
-                props.progressIndex == props.totalProgressIndex;
+                props.increaseIndex();
             }
         }
         // if (response.status == 200) {
