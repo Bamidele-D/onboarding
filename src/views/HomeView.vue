@@ -14,7 +14,7 @@
 
       <OTPView :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 2" :decreaseIndex="decreaseIndex" />
 
-      <BVNVerification  :personalData="personalData" :increaseIndex="increaseIndex" :accountType="accountType" :progressIndex="progressIndex" :totalProgressIndex="totalProgressIndex" v-if="progressIndex == 3" :decreaseIndex="decreaseIndex" />
+      <BVNVerification  :personalData="personalData" :increaseIndex="increaseIndex" :increaseDoubleIndex="increaseDoubleIndex" :accountType="accountType" :progressIndex="progressIndex" :totalProgressIndex="totalProgressIndex" v-if="progressIndex == 3" :decreaseIndex="decreaseIndex" />
 
       <BusinessRegistration :personalData="personalData" :businessData="businessData" :increaseIndex="increaseIndex" v-if="progressIndex == 4" :decreaseIndex="decreaseIndex" />
 
@@ -66,6 +66,10 @@ const selectAccountType = (user) => {
 
 const increaseIndex = () => {
   progressIndex.value += 1;
+  progressBarWidth.value += 20;
+}
+const increaseDoubleIndex = () => {
+  progressIndex.value += 2;
   progressBarWidth.value += 20;
 }
 

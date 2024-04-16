@@ -76,7 +76,7 @@ const props = defineProps([
     'increaseIndex', 
     'accountType', 
     'progressIndex', 
-    'totalProgressIndex', 'decreaseIndex'
+    'totalProgressIndex', 'decreaseIndex', 'increaseDoubleIndex'
 ]);
 
 const loading = ref(false);
@@ -122,9 +122,6 @@ const verifyUserBvnOtp = async () => {
         if(response.status == 200) {
             createCustomerAccount();
         }
-        // if (response.status == 400 || response.status == 404) {
-
-        // }
     } catch (err) {
         loading.value = false;
         console.log(err)
@@ -140,15 +137,12 @@ const createCustomerAccount = async () => {
         if(response.status == 200) {
             console.log(props.accountType);
             if(props.accountType == 'personal') {
-                props.progressIndex = 5;
+                props.progressIndex = props.increaseDoubleIndex();
             }
             if(props.accountType == 'business') {
                 props.increaseIndex();
             }
         }
-        // if (response.status == 200) {
-        //     props.increaseIndex();
-        // }
     } catch (err) {
         loading.value = false;
         console.log(err)
