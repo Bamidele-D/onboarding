@@ -94,7 +94,7 @@ function toggleShowPassword() {
 const validateUserDetails = computed(() => {
     const { first_name, last_name, phone, email, password, bvn } = props.personalData;
     const errors = {};
-    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
     if (!first_name) {
         errors.first_name = 'First name is required';

@@ -144,7 +144,6 @@ const sendUserBvnOtp = async () => {
         try {
             loading.value = true;
             const response = await verifyBVN(props.personalData.bvn, otp.value);
-            console.log(response);
             loading.value = false;
             if(response.status == 200) {
                 createCustomerAccount();
@@ -159,16 +158,20 @@ const sendUserBvnOtp = async () => {
         try {
             loading.value = true;
             const response = await createCustomer(props.personalData);
-            console.log(response);
             loading.value = false;
             if(response.status == 200) {
                 console.log(props.accountType);
                 if(props.accountType == 'personal') {
+                    toast.success(response.message);
                     props.progressIndex = props.increaseDoubleIndex();
                 }
                 if(props.accountType == 'business') {
+                    toast.success(response.message);
                     props.increaseIndex();
                 }
+            }
+            else {
+                toast.error(response.message);
             }
         } catch (err) {
             loading.value = false;
