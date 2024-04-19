@@ -25,13 +25,13 @@
                 </div>
                 <div class="flex flex-col mb-5">
                     <label for="" class="text-sm text-[#62676A]">Phone Number</label>
-                    <input type="text" class="border border-[#B7BBBE] h-[50px] px-2.5 rounded-md text-sm" placeholder="Phone Number" v-model="personalData.phone" @blur="checkUserData('phone')">
+                    <input type="text" class="border border-[#B7BBBE] h-[50px] px-2.5 rounded-md text-sm" placeholder="Phone Number" v-model="personalData.phone" @blur="checkUserData('phone')" @keypress="numbersOnly" maxlength="11">
                     <div class="text-red-500 text-xs mt-1" v-if="validateUserDetails.errors.phone && filledUserData.phone">{{ validateUserDetails.errors.phone }}</div>
                 </div>
 
                 <div class="flex flex-col mb-5">
                     <label for="" class="text-sm text-[#62676A]">BVN</label>
-                    <input type="text" class="border border-[#B7BBBE] h-[50px] px-2.5 rounded-md text-sm" placeholder="BVN" v-model="personalData.bvn" @blur="checkUserData('bvn')">
+                    <input type="text" class="border border-[#B7BBBE] h-[50px] px-2.5 rounded-md text-sm" placeholder="BVN" v-model="personalData.bvn" @blur="checkUserData('bvn')" maxlength="11" @keypress="numbersOnly">
                     <div class="text-red-500 text-xs mt-1" v-if="validateUserDetails.errors.bvn && filledUserData.bvn">{{ validateUserDetails.errors.bvn }}</div>
                 </div>
                 
@@ -41,7 +41,7 @@
                     <div class="text-red-500 text-xs mt-1" v-if="validateUserDetails.errors.email && filledUserData.email">{{ validateUserDetails.errors.email }}</div>
                 </div>
                 
-                <div class="flex flex-col mb-5">
+                <div class="flex flex-col mb-5 relative">
                     <label for="" class="text-sm text-[#62676A]">Password</label>
                     <input :type="showPassword ? 'text' : 'password'" class="border border-[#B7BBBE] h-[50px] px-2.5 rounded-md text-sm" placeholder="Password" v-model="personalData.password" @blur="checkUserData('password')">
                     <span @click="toggleShowPassword" class="cursor-pointer absolute right-[10px] top-[5px] translate-y-[50%] h-[40px] flex items-center">
@@ -51,25 +51,31 @@
                     <div class="text-red-500 text-xs mt-1" v-if="validateUserDetails.errors.password && filledUserData.password">{{ validateUserDetails.errors.password }}</div>
                 </div>
                 
-                <p class="text-sm text-[#62676A] text-center mt-5 mb-2">By clicking the “Create My Account” button, you agree to Kredi’s <a href="" class="font-bold underline">terms of acceptable use.</a></p>
+                <p class="text-sm text-[#62676A] text-center mt-5 mb-2">By clicking the “Continue” button, you agree to Kredi’s <a href="javascript:void(0)" @click="redirectToTerms()" class="font-bold underline cursor-pointer">terms of acceptable use.</a></p>
                 
                 <div>
                     <button class="h-[60px] w-full text-white font-semibold rounded-lg" :class="{'bg-[#1C2C3580] cursor-not-allowed' : !validateUserDetails.isValid, 'bg-[#1C2C35]': validateUserDetails.isValid}" :disabled="!validateUserDetails.isValid" @click.prevent="sendUserOTP()">{{loading ? 'Please wait...' : 'Continue →'}}</button>
                 </div>
             </form>
             <div>
-                <p class="text-center text-sm mt-5">Already have an account? <span class="text-red-500 font-bold">Log In</span></p>
+                <p class="text-center text-sm mt-5">Already have an account? <span class="text-red-500 font-bold cursor-pointer" @click="redirectToLogin()">Log In</span></p>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { sendOTP } from "../services";
+import { ref, computed, onMounted } from "vue";
+import { sendOTP, redirectToLogin, redirectToTerms } from "../services";
+import { numbersOnly } from "../helpers";
 const props = defineProps([
     'personalData', 'increaseIndex', 'decreaseIndex'
 ]);
+import { createToaster } from '@meforma/vue-toaster';
+const toast = createToaster({ position: 'top-right' });
+
+const dateInput = ref(null);
+
 const showPassword = ref(false);
 const filledUserData = ref({
     first_name: false,
@@ -81,17 +87,6 @@ const filledUserData = ref({
 });
 const loading = ref(false);
 
-// const validateInput = computed(() => {
-//     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
-//     const validEmail = emailPattern.test(form.value.email)
-//     const validPhone = form.value.phone.length === 11
-//     if (!validEmail) {
-//         return true;
-//     }
-//     if (!validPhone) {
-//         return true;
-//     }
-// })
 function toggleShowPassword() {
     showPassword.value = !showPassword.value;
 }
@@ -99,6 +94,7 @@ function toggleShowPassword() {
 const validateUserDetails = computed(() => {
     const { first_name, last_name, phone, email, password, bvn } = props.personalData;
     const errors = {};
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
 
     if (!first_name) {
         errors.first_name = 'First name is required';
@@ -106,17 +102,20 @@ const validateUserDetails = computed(() => {
     if (!last_name) {
         errors.last_name = 'last name is required';
     }
-    if (!phone) {
-        errors.phone = 'Phone is required';
+    if (phone.length < 11) {
+        errors.phone = 'Invalid Phone number';
     }
-    if (!email) {
-        errors.email = 'Email Address is required';
+    if (!emailPattern.test(email)) {
+        errors.email = 'Invalid Email Address';
     }
     if (!password) {
         errors.password = 'Password is required';
     }
-    if (!bvn) {
-        errors.bvn = 'bvn is required';
+    if(password.length < 8) {
+        errors.password = 'Password must be at least 8 characters';
+    }
+    if (bvn.length < 11) {
+        errors.bvn = 'Invalid BVN';
     }
     
     return {
@@ -133,7 +132,7 @@ const sendUserOTP = async () => {
     try {
         loading.value = true;
         const response = await sendOTP(props.personalData.email, props.personalData.phone);
-        console.log(response);
+        toast.success(response.message);
         loading.value = false;
         if(response.status == 200) {
             props.increaseIndex();
@@ -141,6 +140,8 @@ const sendUserOTP = async () => {
     } catch(err) {
         loading.value = false;
         console.log(err)
+        toast.error(err.response.data.message || err.response.message);
     }
 }
+
 </script>

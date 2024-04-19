@@ -124,3 +124,10 @@ export const createBusiness = async (businessData) => {
     }
 }
 
+export const redirectToLogin = () => {
+    window.location.href = "https://www.google.com";
+}
+
+export const redirectToTerms = () => {
+    window.location.href = "https://www.google.com";
+}

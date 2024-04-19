@@ -46,7 +46,7 @@
                 <div class="flex gap-5 mb-5">
                     <div class="flex flex-col w-1/2">
                         <label for="" class="text-sm text-[#62676A]">Date of Incorporation</label>
-                        <input type="date" class="border border-[#B7BBBE] h-[50px] px-2.5 rounded-md text-sm" placeholder="" v-model="businessData.date_of_incorporation" @blur="checkBusinessData('date_of_incorporation')">
+                        <input type="date" class="border border-[#B7BBBE] h-[50px] px-2.5 rounded-md text-sm" placeholder="" v-model="businessData.date_of_incorporation" @blur="checkBusinessData('date_of_incorporation')" ref="dateInput">
                         <div class="text-red-500 text-xs mt-1" v-if="validateBusinessDetails.errors.date_of_incorporation && filledBusinessData.date_of_incorporation">{{ validateBusinessDetails.errors.date_of_incorporation }}</div>
                     </div>
                     <div class="flex flex-col w-1/2">
@@ -65,7 +65,7 @@
                     <div class="text-red-500 text-xs mt-1" v-if="validateBusinessDetails.errors.address && filledBusinessData.address">{{ validateBusinessDetails.errors.address }}</div>
                 </div>
 
-                <div class="flex flex-col w-1/2">
+                <div class="flex flex-col">
                     <label for="" class="text-sm text-[#62676A]">Country</label>
                     <input type="text" class="border border-[#B7BBBE] h-[50px] px-2.5 rounded-md text-sm" placeholder="Enter Country" v-model="businessData.country" @blur="checkBusinessData('country')">
                     <div class="text-red-500 text-xs mt-1" v-if="validateBusinessDetails.errors.country && filledBusinessData.country">{{ validateBusinessDetails.errors.country }}</div>
@@ -82,11 +82,16 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { createBusiness } from "../services";
+import { createToaster } from '@meforma/vue-toaster';
+const toast = createToaster({ position: 'top-right' });
+
 const props = defineProps([
     'businessData', 'personalData', 'increaseIndex', 'decreaseIndex'
 ]);
+
+const dateInput = ref(null);
 
 const filledBusinessData = ref({
     organisation_name: false,
@@ -96,19 +101,6 @@ const filledBusinessData = ref({
     address: false,
 });
 const loading = ref(false);
-
-// const validateInput = computed(() => {
-//     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
-//     const validEmail = emailPattern.test(form.value.email)
-//     const validPhone = form.value.phone.length === 11
-//     if (!validEmail) {
-//         return true;
-//     }
-//     if (!validPhone) {
-//         return true;
-//     }
-// })
-
 
 const validateBusinessDetails = computed(() => {
     const { organisation_name, type_of_business, date_of_incorporation, country, address } = props.businessData;
@@ -149,12 +141,22 @@ const createBusinessAccount = async () => {
         const response = await createBusiness(payload);
         console.log(response);
         loading.value = false;
-        if(response.status == 200) {
+        if (response.status == 200) {
+            toast.success(response.message);
             props.increaseIndex();
+        }
+        else {
+            toast.error(response.message);
         }
     } catch(err) {
         loading.value = false;
         console.log(err)
+        toast.error(err.response.data.message || err.response.message);
     }
 }
+
+onMounted(() => {
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.value.setAttribute('max', today);
+})
 </script>

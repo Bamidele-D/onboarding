@@ -3,93 +3,122 @@
         <div>
             <span class="cursor-pointer" @click="decreaseIndex()">
                 <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 20.3389L4 12.3389M4 12.3389L12 4.33887M4 12.3389H18.5" stroke="#111111" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
+                    <path d="M12 20.3389L4 12.3389M4 12.3389L12 4.33887M4 12.3389H18.5" stroke="#111111" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
                 </svg>
             </span>
             <h1 class="text-3xl font-bold mt-4">Enter the code</h1>
             <p class="text-[#494D4F] text-sm">Enter the OTP code sent to your email, be careful not to share the code
                 with anyone.</p>
-        </div>
-
-        <div class="mt-20">
-            <form action="">
-                <div class="flex justify-center gap-5 mb-5">
-                    <div class="my-4 flex justify-center">
-                        <v-otp-input ref="otpInput" input-classes="otp-input" separator="&nbsp;&nbsp;" :num-inputs="6"
+            </div>
+            
+            <div class="mt-20">
+                <form action="">
+                    <div class="flex justify-center gap-5 mb-5">
+                        <div class="my-4 flex justify-center">
+                            <v-otp-input ref="otpInput" input-classes="otp-input" separator="&nbsp;&nbsp;" :num-inputs="6"
                             :should-auto-focus="true" :is-input-num="true"
                             :conditionalClass="['one', 'two', 'three', 'four', 'five', 'six']"
                             :placeholder="['0', '0', '0', '0', '0', '0']" @on-change="handleOnChange"
                             @on-complete="handleOnComplete" />
+                        </div>
                     </div>
-                </div>
-
-                <div class="flex justify-center">
-                    <button class="bg-[#1C2C35] h-[60px] w-[70%] text-white font-semibold rounded-lg" @click.prevent="verifyUserOTP()">{{ loading ? 'Please wait...' : 'Verify Email' }}</button>
-                </div>
-            </form>
+                    
+                    <p class="text-xs mb-8 text-center">
+                        Didn’t recieve a code?
+                        <span
+                        @click="handleResendOTP"
+                        class="bg-[#1C2C35] text-white font-medium py-1 px-2 cursor-pointer rounded-md"
+                        >{{isResend ? 'Please wait...': 'Resend'}}</span
+                        >
+                    </p>
+                    
+                    <div class="flex justify-center">
+                        <button class="h-[60px] w-[70%] text-white font-semibold rounded-lg"  :class="{'bg-[#1C2C3580] cursor-not-allowed' : otp.length !== 6, 'bg-[#1C2C35]': otp.length == 6}" :disabled="otp.length !== 6" @click.prevent="verifyUserOTP()">{{ loading ? 'Please wait...' : 'Verify Email' }}</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-</template>
-
-<script setup>
-import { ref } from "vue";
-import { verifyOTP } from "../services";
-const props = defineProps([
+    </template>
+    
+    <script setup>
+    import { ref } from "vue";
+    import { verifyOTP, sendOTP } from "../services";
+    const props = defineProps([
     'personalData', 'increaseIndex', 'decreaseIndex'
-]);
-
-const otp = ref("");
-const loading = ref(false);
-
-const handleOnChange = (e) => {
-    otp.value = e;
-};
-
-const handleOnComplete = (e) => {
-    otp.value = e;
-};
-
-const verifyUserOTP = async () => {
-    try {
-        loading.value = true;
-        const response = await verifyOTP(props.personalData.email, props.personalData.phone, otp.value);
-        console.log(response);
-        loading.value = false;
-        if (response.status == 200) {
-            props.increaseIndex();
+    ]);
+    import { createToaster } from '@meforma/vue-toaster';
+    const toast = createToaster({ position: 'top-right' });
+    
+    const otp = ref("");
+    const loading = ref(false);
+    const isResend = ref(false);
+    
+    const handleOnChange = (e) => {
+        otp.value = e;
+    };
+    
+    const handleOnComplete = (e) => {
+        otp.value = e;
+    };
+    
+    const verifyUserOTP = async () => {
+        try {
+            loading.value = true;
+            const response = await verifyOTP(props.personalData.email, props.personalData.phone, otp.value);
+            loading.value = false;
+            if (response.status == 200) {
+                toast.success(response.message);
+                props.increaseIndex();
+            }
+            else {
+                toast.error(response.message);
+            }
+        } catch (err) {
+            loading.value = false;
+            console.log(err);
+            toast.error(err.response.data.message || err.response.message);
         }
-    } catch (err) {
-        loading.value = false;
-        console.log(err)
     }
-}
-</script>
-
-<style>
-.one,
-.two,
-.three,
-.four,
-.five,
-.six {
-    width: 56px;
-    height: 56px;
-    text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-weight: 300;
-}
-
-@media screen and (max-width: 640px) {
-
+    
+    const handleResendOTP = async () => {
+        try {
+            isResend.value = true;
+            const response = await sendOTP(props.personalData.email, props.personalData.phone);
+            toast.success(response.message);
+            isResend.value = false;
+            } catch(err) {
+                isResend.value = false;
+                console.log(err)
+                toast.error(err.response.data.message || err.response.message);
+            }
+        }
+    </script>
+    
+    <style>
     .one,
     .two,
     .three,
     .four,
     .five,
     .six {
-        width: 46px;
-        height: 46px;
+        width: 56px;
+        height: 56px;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-weight: 300;
     }
-}
+    
+    @media screen and (max-width: 640px) {
+        
+        .one,
+        .two,
+        .three,
+        .four,
+        .five,
+        .six {
+            width: 46px;
+            height: 46px;
+        }
+    }
 </style>

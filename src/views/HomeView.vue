@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <SidebarView />
+    <SidebarView :progressIndex="progressIndex" />
     <div class="px-36 py-20 w-[calc(100%_-_18rem)] h-screen overflow-y-scroll ">
       <div class="mb-[40px]">
         <div class="w-full h-[4px] bg-[#F4F9FD] mb-[5px]">
@@ -18,7 +18,7 @@
 
       <BusinessRegistration :personalData="personalData" :businessData="businessData" :increaseIndex="increaseIndex" v-if="progressIndex == 4" :decreaseIndex="decreaseIndex" />
 
-      <RegistrationCompleted v-if="progressIndex == 5" />
+      <RegistrationCompleted :resetData="resetData" v-if="progressIndex == 5" />
     </div>
   </div>
 </template>
@@ -35,8 +35,7 @@ import BusinessRegistration from "../components/BusinessRegistration.vue";
 import RegistrationCompleted from "../components/RegistrationCompleted.vue";
 
 const accountType = ref("");
-const progressIndex = ref(0);
-const totalProgressIndex = ref(5);
+const  progressIndex = ref(0);
 const progressBarWidth = ref(0);
 const personalData = ref({
   first_name: "",
@@ -47,17 +46,31 @@ const personalData = ref({
   bvn: ""
 });
 
+const phoneNumber = computed(() => personalData.value.phone);
+
 const businessData = ref({
     organisation_name: "",
     type_of_business: "",
     date_of_incorporation: "",
     country: "",
     address: "",
-    phone_no: personalData.value.phone,
+    phone_no: phoneNumber.value
 })
 
 const progressWidth = computed(() => {
   return `${progressBarWidth.value}%`
+})
+
+const totalProgressIndex = computed(() => {
+  if (accountType.value == 'personal') {
+    return 4;
+  }
+  if (accountType.value == 'business') {
+    return 5;
+  }
+  else {
+    return 0;
+  }
 })
 
 const selectAccountType = (user) => {
@@ -66,7 +79,12 @@ const selectAccountType = (user) => {
 
 const increaseIndex = () => {
   progressIndex.value += 1;
-  progressBarWidth.value += 20;
+  if (accountType.value == 'personal') {
+    progressBarWidth.value += 20;
+  }
+  if (accountType.value == 'business') {
+    progressBarWidth.value += 25;
+  }
 }
 const increaseDoubleIndex = () => {
   progressIndex.value += 2;
@@ -75,6 +93,31 @@ const increaseDoubleIndex = () => {
 
 const decreaseIndex = () => {
   progressIndex.value -= 1;
-  progressBarWidth.value -= 20;
+  if (accountType.value == 'personal') {
+    progressBarWidth.value -= 20;
+  }
+  if (accountType.value == 'business') {
+    progressBarWidth.value -= 25;
+  }
+}
+
+const resetData = () => {
+  personalData.value.first_name = '';
+  personalData.value.last_name = "";
+  personalData.value.phone = "";
+  personalData.value.email = "";
+  personalData.value.password = "";
+  personalData.value.bvn = "";
+
+  businessData.value.organisation_name = '';
+  businessData.value.type_of_business = '';
+  businessData.value.date_of_incorporation = '';
+  businessData.value.country = '';
+  businessData.value.address = '';
+  businessData.value.phone_no = personalData.value.phone;
+
+  accountType.value = "";
+  progressIndex.value = 0;
+  progressBarWidth.value = 0;
 }
 </script>

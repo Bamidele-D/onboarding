@@ -6,7 +6,7 @@
                 <li class="text-white py-4 text-sm flex items-center gap-4">
                     <span>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="10" cy="10" r="10" fill="#C1C1C1"/>
+                            <circle cx="10" cy="10" r="10" :fill="progressIndex == 1 ? '': '#C1C1C1'" />
                             <path d="M16 7.62069L8.1107 15L4 11.1517L4.66421 10.531L8.1107 13.7448L15.3358 7L16 7.62069Z" fill="white"/>
                         </svg>
                     </span>
@@ -43,3 +43,9 @@
         </div>
     </div>
 </template>
+
+<script setup>
+const props = defineProps([
+    'progressIndex',
+]);
+</script>
