@@ -105,7 +105,7 @@ const showBusinessRegistration = computed(() => {
 });
 
 const showRegistrationCompleted = computed(() => {
-  return progressIndex.value === 4 || progressIndex.value === 5;
+  return (accountType.value === 'personal' && progressIndex.value === 4) || progressIndex.value === 5;
 });
 
 const resetData = () => {
