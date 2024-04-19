@@ -9,16 +9,16 @@
         <span>{{ progressIndex }}/{{ totalProgressIndex }}</span>
       </div>
       <GetStarted :accountType="accountType" :selectAccountType="selectAccountType" :increaseIndex="increaseIndex"  v-if="progressIndex == 0" :decreaseIndex="decreaseIndex" />
-
+      
       <CustomerDetails :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 1" :decreaseIndex="decreaseIndex" />
-
+      
       <OTPView :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 2" :decreaseIndex="decreaseIndex" />
-
-      <BVNVerification  :personalData="personalData" :increaseIndex="increaseIndex" :increaseDoubleIndex="increaseDoubleIndex" :accountType="accountType" :progressIndex="progressIndex" :totalProgressIndex="totalProgressIndex" v-if="progressIndex == 3" :decreaseIndex="decreaseIndex" />
-
-      <BusinessRegistration :personalData="personalData" :businessData="businessData" :increaseIndex="increaseIndex" v-if="progressIndex == 4" :decreaseIndex="decreaseIndex" />
-
-      <RegistrationCompleted :resetData="resetData" v-if="progressIndex == 5" />
+      
+      <BVNVerification  :personalData="personalData" :increaseIndex="increaseIndex" :accountType="accountType" :progressIndex="progressIndex" :totalProgressIndex="totalProgressIndex" v-if="progressIndex == 3" :decreaseIndex="decreaseIndex" />
+      
+      <BusinessRegistration :personalData="personalData" :businessData="businessData" :increaseIndex="increaseIndex" v-if="showBusinessRegistration" :decreaseIndex="decreaseIndex" />
+      
+      <RegistrationCompleted :resetData="resetData" v-if="showRegistrationCompleted" />
     </div>
   </div>
 </template>
@@ -46,15 +46,13 @@ const personalData = ref({
   bvn: ""
 });
 
-const phoneNumber = computed(() => personalData.value.phone);
-
 const businessData = ref({
-    organisation_name: "",
-    type_of_business: "",
-    date_of_incorporation: "",
-    country: "",
-    address: "",
-    phone_no: phoneNumber.value
+  organisation_name: "",
+  type_of_business: "",
+  date_of_incorporation: "",
+  country: "",
+  address: "",
+  phone_no: personalData.value.value
 })
 
 const progressWidth = computed(() => {
@@ -75,31 +73,40 @@ const totalProgressIndex = computed(() => {
 
 const selectAccountType = (user) => {
   accountType.value = user;
+  progressIndex.value = 0;
 }
 
 const increaseIndex = () => {
   progressIndex.value += 1;
   if (accountType.value == 'personal') {
-    progressBarWidth.value += 20;
-  }
-  if (accountType.value == 'business') {
     progressBarWidth.value += 25;
   }
-}
-const increaseDoubleIndex = () => {
-  progressIndex.value += 2;
-  progressBarWidth.value += 20;
+  if (accountType.value == 'business') {
+    progressBarWidth.value += 20;
+  }
 }
 
 const decreaseIndex = () => {
   progressIndex.value -= 1;
   if (accountType.value == 'personal') {
-    progressBarWidth.value -= 20;
-  }
-  if (accountType.value == 'business') {
     progressBarWidth.value -= 25;
   }
+  if (accountType.value == 'business') {
+    progressBarWidth.value -= 20;
+  }
 }
+
+const dynamicProgressIndex = computed(() => {
+  return accountType.value === 'personal' ? 4 : progressIndex.value;
+});
+
+const showBusinessRegistration = computed(() => {
+  return accountType.value !== 'personal' && dynamicProgressIndex.value === 4;
+});
+
+const showRegistrationCompleted = computed(() => {
+  return progressIndex.value === 4 || progressIndex.value === 5;
+});
 
 const resetData = () => {
   personalData.value.first_name = '';
@@ -108,14 +115,14 @@ const resetData = () => {
   personalData.value.email = "";
   personalData.value.password = "";
   personalData.value.bvn = "";
-
+  
   businessData.value.organisation_name = '';
   businessData.value.type_of_business = '';
   businessData.value.date_of_incorporation = '';
   businessData.value.country = '';
   businessData.value.address = '';
   businessData.value.phone_no = personalData.value.phone;
-
+  
   accountType.value = "";
   progressIndex.value = 0;
   progressBarWidth.value = 0;

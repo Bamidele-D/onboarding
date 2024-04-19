@@ -1,13 +1,13 @@
 <template>
     <div>
+        <span class="cursor-pointer" @click="decreaseIndex()">
+            <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 20.3389L4 12.3389M4 12.3389L12 4.33887M4 12.3389H18.5" stroke="#111111" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
+            </svg>
+        </span>
         <div v-if="isBvnVerified">
             <div class="w-full" v-if="isBVN">
                 <div>
-                    <span class="cursor-pointer" @click="decreaseIndex()">
-                        <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 20.3389L4 12.3389M4 12.3389L12 4.33887M4 12.3389H18.5" stroke="#111111" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
-                        </svg>
-                    </span>
                     <h1 class="text-3xl font-bold mt-4">BVN Validation</h1>
                     <p class="text-[#494D4F] text-sm">Validate your BVN </p>
                 </div>
@@ -60,7 +60,7 @@
                         
                         <div class="flex justify-center">
                             <button class="h-[60px] w-[70%] text-white font-semibold rounded-lg" :class="{'bg-[#1C2C3580] cursor-not-allowed' : otp.length !== 6, 'bg-[#1C2C35]': otp.length == 6}" :disabled="otp.length !== 6" 
-                            @click.prevent="verifyUserBvnOtp()">{{ loading ? 'Please wait...' : 'Verify Email'
+                            @click.prevent="verifyUserBvnOtp()">{{ loading ? 'Please wait...' : 'Verify BVN'
                         }}</button>
                     </div>
                 </form>
@@ -88,7 +88,7 @@ const props = defineProps([
 'increaseIndex', 
 'accountType', 
 'progressIndex', 
-'totalProgressIndex', 'decreaseIndex', 'increaseDoubleIndex'
+'totalProgressIndex', 'decreaseIndex'
 ]);
 
 const loading = ref(false);
@@ -126,19 +126,19 @@ const sendUserBvnOtp = async () => {
             toast.error(err.response.data.message || err.response.message);
         }
     }
-
+    
     const handleResendOTP = async () => {
         try {
             isResend.value = true;
             const response = await sendBvnOtp(props.personalData.bvn);
             toast.success(response.message);
             isResend.value = false;
-            } catch(err) {
-                isResend.value = false;
-                console.log(err)
-                toast.error(err.response.data.message || err.response.message);
-            }
+        } catch(err) {
+            isResend.value = false;
+            console.log(err)
+            toast.error(err.response.data.message || err.response.message);
         }
+    }
     
     const verifyUserBvnOtp = async () => {
         try {
@@ -160,15 +160,8 @@ const sendUserBvnOtp = async () => {
             const response = await createCustomer(props.personalData);
             loading.value = false;
             if(response.status == 200) {
-                console.log(props.accountType);
-                if(props.accountType == 'personal') {
-                    toast.success(response.message);
-                    props.progressIndex = props.increaseDoubleIndex();
-                }
-                if(props.accountType == 'business') {
-                    toast.success(response.message);
-                    props.increaseIndex();
-                }
+                toast.success(response.message);
+                props.increaseIndex();
             }
             else {
                 toast.error(response.message);
