@@ -133,11 +133,13 @@ const checkBusinessData = (businessData) => {
 }
 
 const createBusinessAccount = async () => {
+    const payload = {
+        ...props.personalData, ...props.businessData
+    }
+    console.log(payload);
     try {
         loading.value = true;
-        const payload = {
-            ...props.personalData, ...props.businessData
-        }
+        
         const response = await createBusiness(payload);
         console.log(response);
         loading.value = false;

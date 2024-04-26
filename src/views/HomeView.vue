@@ -16,7 +16,8 @@
       
       <BVNVerification  :personalData="personalData" :increaseIndex="increaseIndex" :accountType="accountType" :progressIndex="progressIndex" :totalProgressIndex="totalProgressIndex" v-if="progressIndex == 3" :decreaseIndex="decreaseIndex" />
       
-      <BusinessRegistration :personalData="personalData" :businessData="businessData" :increaseIndex="increaseIndex" v-if="showBusinessRegistration" :decreaseIndex="decreaseIndex" />
+      <BusinessRegistration :personalData="personalData" :businessData="businessData" :increaseIndex="increaseIndex" :decreaseIndex="decreaseIndex" 
+      v-if="showBusinessRegistration" />
       
       <RegistrationCompleted :resetData="resetData" v-if="showRegistrationCompleted" />
     </div>
@@ -52,7 +53,6 @@ const businessData = ref({
   date_of_incorporation: "",
   country: "",
   address: "",
-  phone_no: personalData.value.value
 })
 
 const progressWidth = computed(() => {
