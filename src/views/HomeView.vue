@@ -15,7 +15,6 @@
       <OTPView :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 2" :decreaseIndex="decreaseIndex" />
       
       <BVNVerification  :personalData="personalData" :increaseIndex="increaseIndex" :accountType="accountType" :progressIndex="progressIndex" :totalProgressIndex="totalProgressIndex" v-if="progressIndex == 3" :decreaseIndex="decreaseIndex" />
-      
       <BusinessRegistration :personalData="personalData" :businessData="businessData" :increaseIndex="increaseIndex" :decreaseIndex="decreaseIndex" 
       v-if="showBusinessRegistration" />
       
@@ -39,20 +38,20 @@ const accountType = ref("");
 const  progressIndex = ref(0);
 const progressBarWidth = ref(0);
 const personalData = ref({
-  first_name: "",
-  last_name: "",
-  phone: "",
-  email: "",
-  password: "",
-  bvn: ""
+  first_name: "afeez",
+  last_name: "dosunmu",
+  phone: "08160897065",
+  email: "dosunmuaafeez@gmail.com",
+  password: "password",
+  bvn: "00000111111"
 });
 
 const businessData = ref({
-  organisation_name: "",
-  type_of_business: "",
+  organisation_name: "font tech",
+  type_of_business: "tech",
   date_of_incorporation: "",
-  country: "",
-  address: "",
+  country: "nigeria",
+  address: "nigeria",
 })
 
 const progressWidth = computed(() => {

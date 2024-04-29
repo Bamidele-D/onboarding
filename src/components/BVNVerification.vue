@@ -155,9 +155,12 @@ const sendUserBvnOtp = async () => {
     }
     
     const createCustomerAccount = async () => {
+        const payload = {
+            type: props.accountType, ...props.personalData
+        }
         try {
             loading.value = true;
-            const response = await createCustomer(props.personalData);
+            const response = await createCustomer(payload);
             loading.value = false;
             if(response.status == 200) {
                 toast.success(response.message);
