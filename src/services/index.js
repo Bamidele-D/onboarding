@@ -124,6 +124,24 @@ export const createBusiness = async (businessData) => {
     }
 }
 
+export const verifyCustomer = async (customerData) => {
+    try {
+        const response = await fetch('https://wallet-user-api.test.thekredibank.com/api/onboarding/v2/validate', {
+            method: 'POST',
+            body: JSON.stringify(customerData),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
+                'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
+            },
+        })
+        const data = await response.json();
+        return data;
+    } catch(err) {
+        console.log(err);
+    }
+}
+
 export const redirectToLogin = () => {
     window.location.href = "https://www.google.com";
 }

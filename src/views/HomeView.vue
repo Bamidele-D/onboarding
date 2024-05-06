@@ -10,7 +10,7 @@
       </div>
       <GetStarted :accountType="accountType" :selectAccountType="selectAccountType" :increaseIndex="increaseIndex"  v-if="progressIndex == 0" :decreaseIndex="decreaseIndex" />
       
-      <CustomerDetails :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 1" :decreaseIndex="decreaseIndex" />
+      <CustomerDetails :accountType="accountType" :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 0" :decreaseIndex="decreaseIndex" />
       
       <OTPView :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 2" :decreaseIndex="decreaseIndex" />
       
@@ -38,12 +38,12 @@ const accountType = ref("");
 const  progressIndex = ref(0);
 const progressBarWidth = ref(0);
 const personalData = ref({
-  first_name: "",
-  last_name: "",
-  phone: "",
-  email: "",
-  password: "",
-  bvn: ""
+  first_name: "afeez",
+  last_name: "dosunmu",
+  phone: "08160897065",
+  email: "dosunmuafeez37@gmail.com",
+  password: "password",
+  bvn: "00000111111"
 });
 
 const businessData = ref({

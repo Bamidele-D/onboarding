@@ -3,7 +3,7 @@
         <div>
             <span class="cursor-pointer" @click="decreaseIndex()">
                 <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 20.3389L4 12.3389M4 12.3389L12 4.33887M4 12.3389H18.5" stroke="#111111" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
+                    <path d="M12 20.3389L4 12.3389M4 12.3389L12 4.33887M4 12.3389H18.5" stroke="#111111" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
                 </svg>
             </span>
             <h1 class="text-3xl font-bold mt-4">Customer Details</h1>
@@ -28,7 +28,7 @@
                     <input type="text" class="border border-[#B7BBBE] h-[50px] px-2.5 rounded-md text-sm" placeholder="Phone Number" v-model="personalData.phone" @blur="checkUserData('phone')" @keypress="numbersOnly" maxlength="11">
                     <div class="text-red-500 text-xs mt-1" v-if="validateUserDetails.errors.phone && filledUserData.phone">{{ validateUserDetails.errors.phone }}</div>
                 </div>
-
+                
                 <div class="flex flex-col mb-5">
                     <label for="" class="text-sm text-[#62676A]">BVN</label>
                     <input type="text" class="border border-[#B7BBBE] h-[50px] px-2.5 rounded-md text-sm" placeholder="BVN" v-model="personalData.bvn" @blur="checkUserData('bvn')" maxlength="11" @keypress="numbersOnly">
@@ -54,7 +54,7 @@
                 <p class="text-sm text-[#62676A] text-center mt-5 mb-2">By clicking the “Continue” button, you agree to Kredi’s <a href="javascript:void(0)" @click="redirectToTerms()" class="font-bold underline cursor-pointer">terms of acceptable use.</a></p>
                 
                 <div>
-                    <button class="h-[60px] w-full text-white font-semibold rounded-lg" :class="{'bg-[#1C2C3580] cursor-not-allowed' : !validateUserDetails.isValid, 'bg-[#1C2C35]': validateUserDetails.isValid}" :disabled="!validateUserDetails.isValid" @click.prevent="sendUserOTP()">{{loading ? 'Please wait...' : 'Continue →'}}</button>
+                    <button class="h-[60px] w-full text-white font-semibold rounded-lg" :class="{'bg-[#1C2C3580] cursor-not-allowed' : !validateUserDetails.isValid, 'bg-[#1C2C35]': validateUserDetails.isValid}" :disabled="!validateUserDetails.isValid && isVerifying" @click.prevent="verifyCustomerData()">{{loading ? 'Please wait...' : 'Continue →'}}</button>
                 </div>
             </form>
             <div>
@@ -66,10 +66,10 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { sendOTP, redirectToLogin, redirectToTerms } from "../services";
+import { sendOTP, redirectToLogin, redirectToTerms, verifyCustomer } from "../services";
 import { numbersOnly } from "../helpers";
 const props = defineProps([
-    'personalData', 'increaseIndex', 'decreaseIndex'
+'personalData', 'increaseIndex', 'decreaseIndex', 'accountType'
 ]);
 import { createToaster } from '@meforma/vue-toaster';
 const toast = createToaster({ position: 'top-right' });
@@ -86,6 +86,7 @@ const filledUserData = ref({
     bvn: false
 });
 const loading = ref(false);
+const isVerifying = ref(true);
 
 function toggleShowPassword() {
     showPassword.value = !showPassword.value;
@@ -95,7 +96,7 @@ const validateUserDetails = computed(() => {
     const { first_name, last_name, phone, email, password, bvn } = props.personalData;
     const errors = {};
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
+    
     if (!first_name) {
         errors.first_name = 'First name is required';
     }
@@ -126,6 +127,44 @@ const validateUserDetails = computed(() => {
 
 const checkUserData = (userData) => {
     filledUserData.value[userData] = true;
+}
+
+const verifyCustomerData = async () => {
+    try {
+        loading.value = true;
+        isVerifying.value = false;
+        const payload = {
+            email: props.personalData.email,
+            phone: props.personalData.phone
+        }
+        const response = await verifyCustomer(payload);
+        loading.value = false;
+        console.log(response.data);
+        if (props.accountType === 'personal') {
+            if (response.data.email && response.data.phone) {
+                toast.error("Email address and Phone number exists");
+            } else if (!response.data.email && response.data.phone) {
+                toast.error("Phone number exists");
+            } else if (response.data.email && !response.data.phone) {
+                toast.error("Email address exists");
+            } else {
+                sendUserOTP();
+            }
+        } else if (props.accountType === 'business') {
+            if (response.data.email && response.data.phone) {
+                toast.error("Email address and Phone number exists");
+            } else if (response.data.email && !response.data.phone) {
+                toast.error("Email address exists");
+            } else {
+                sendUserOTP();
+            }
+        }
+        
+    } catch(err) {
+        loading.value = false;
+        console.log(err)
+        toast.error(err.response.data.message || err.response.message);
+    }
 }
 
 const sendUserOTP = async () => {
