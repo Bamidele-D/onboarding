@@ -10,7 +10,7 @@
       </div>
       <GetStarted :accountType="accountType" :selectAccountType="selectAccountType" :increaseIndex="increaseIndex"  v-if="progressIndex == 0" :decreaseIndex="decreaseIndex" />
       
-      <CustomerDetails :accountType="accountType" :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 0" :decreaseIndex="decreaseIndex" />
+      <CustomerDetails :accountType="accountType" :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 1" :decreaseIndex="decreaseIndex" />
       
       <OTPView :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 2" :decreaseIndex="decreaseIndex" />
       
