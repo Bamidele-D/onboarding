@@ -68,7 +68,7 @@
         </div>
     </div>
     
-    <div v-else>
+    <div class="flex justify-center" v-else>
         <button class="bg-[#1C2C35] h-[60px] w-[70%] text-white font-semibold rounded-lg"
         @click.prevent="openBVNPortal()">
         {{ loading ? 'Please wait...' : 'Verify BVN'}}
@@ -79,7 +79,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { sendBvnOtp, verifyBVN, createCustomer } from "../services";
+import { sendBvnOtp, verifyBVN, createCustomer, verifyBVNFromNibss, verifyUserBVNDetails } from "../services";
 import { createToaster } from '@meforma/vue-toaster';
 const toast = createToaster({ position: 'top-right' });
 
@@ -175,10 +175,49 @@ const sendUserBvnOtp = async () => {
         }
     }
     
-    const openBVNPortal = () => {
-        const newWindow = window.open('https://idsandbox.nibss-plc.com.ng/oxauth/authorize.htm?scope=contact_info&acr_values=otp&response_type=code&redirect_uri=https://thekredibank.com/&client_id=c5ba1807-b3e1-48db-88e3-4d62de81d7f7', '_blank', 'width=600,height=400');
-        if (newWindow) {
-            newWindow.focus();
+    const openBVNPortal = async () => {
+        try {
+            loading.value = true;
+            const response = await verifyBVNFromNibss();
+            console.log(response.data);
+            if(response.data) {
+                console.log(response.data.consent_url);
+                const newWindow = window.open(response.data.consent_url, '_blank', 'width=600,height=400');
+                if (newWindow) {
+                    newWindow.focus();
+                }
+                setTimeout(()=> {
+                    if(newWindow) {
+                        newWindow.close();
+                        verifyBVNDetails();
+                    }
+                }, 30000);
+            }
+            else {
+                toast.error("Invalid verification");
+            }
+        } catch (err) {
+            loading.value = false;
+            console.log(err)
+        }
+    }
+
+    const verifyBVNDetails = async () => {
+        try {
+            loading.value = true;
+            const response = await verifyUserBVNDetails(props.personalData.bvn);
+            loading.value = false;
+            console.log(response);
+            if(response.success) {
+                toast.success(response.message || "BVN successfully verified");
+                props.increaseIndex();
+            }
+            else {
+                toast.error(response.message);
+            }
+        } catch (err) {
+            loading.value = false;
+            console.log(err)
         }
     }
 </script>

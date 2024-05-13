@@ -6,19 +6,19 @@ export const sendOTP = async (email, phone) => {
     }
     try {
         const response = await fetch('https://wallet-user-api.test.thekredibank.com/api/onboarding/v2/otp/create', {
-            method: 'POST',
-            body: JSON.stringify(payload),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
-                'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
-            },
-        })
-        const data = await response.json();
-        return data;
-    } catch(err) {
-        console.log(err);
-    }
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
+            'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
+        },
+    })
+    const data = await response.json();
+    return data;
+} catch(err) {
+    console.log(err);
+}
 }
 
 export const verifyOTP = async (email, phone, otp) => {
@@ -30,19 +30,19 @@ export const verifyOTP = async (email, phone, otp) => {
     }
     try {
         const response = await fetch('https://wallet-user-api.test.thekredibank.com/api/onboarding/v2/otp/validate', {
-            method: 'POST',
-            body: JSON.stringify(payload),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
-                'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
-            },
-        })
-        const data = await response.json();
-        return data;
-    } catch(err) {
-        console.log(err);
-    }
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
+            'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
+        },
+    })
+    const data = await response.json();
+    return data;
+} catch(err) {
+    console.log(err);
+}
 }
 
 export const sendBvnOtp = async (bvn) => {
@@ -51,19 +51,19 @@ export const sendBvnOtp = async (bvn) => {
     }
     try {
         const response = await fetch('https://wallet-user-api.test.thekredibank.com/api/onboarding/v2/bvn/verify', {
-            method: 'POST',
-            body: JSON.stringify(payload),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
-                'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
-            },
-        })
-        const data = await response.json();
-        return data;
-    } catch(err) {
-        console.log(err);
-    }
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
+            'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
+        },
+    })
+    const data = await response.json();
+    return data;
+} catch(err) {
+    console.log(err);
+}
 }
 
 export const verifyBVN = async (bvn, otp) => {
@@ -73,73 +73,109 @@ export const verifyBVN = async (bvn, otp) => {
     }
     try {
         const response = await fetch('https://wallet-user-api.test.thekredibank.com/api/onboarding/v2/bvn/validate', {
-            method: 'POST',
-            body: JSON.stringify(payload),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
-                'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
-            },
-        })
-        const data = await response.json();
-        return data;
-    } catch(err) {
-        console.log(err);
-    }
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
+            'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
+        },
+    })
+    const data = await response.json();
+    return data;
+} catch(err) {
+    console.log(err);
+}
 }
 
 export const createCustomer = async (userData) => {
     try {
         const response = await fetch('https://wallet-user-api.test.thekredibank.com/api/onboarding/v2/customer/create', {
-            method: 'POST',
-            body: JSON.stringify(userData),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
-                'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
-            },
-        })
-        const data = await response.json();
-        return data;
-    } catch(err) {
-        console.log(err);
-    }
+        method: 'POST',
+        body: JSON.stringify(userData),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
+            'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
+        },
+    })
+    const data = await response.json();
+    return data;
+} catch(err) {
+    console.log(err);
+}
 }
 
 export const createBusiness = async (businessData) => {
     try {
         const response = await fetch('https://wallet-user-api.test.thekredibank.com/api/onboarding/v2/business/create', {
-            method: 'POST',
-            body: JSON.stringify(businessData),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
-                'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
-            },
-        })
-        const data = await response.json();
-        return data;
-    } catch(err) {
-        console.log(err);
-    }
+        method: 'POST',
+        body: JSON.stringify(businessData),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
+            'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
+        },
+    })
+    const data = await response.json();
+    return data;
+} catch(err) {
+    console.log(err);
+}
 }
 
 export const verifyCustomer = async (customerData) => {
     try {
         const response = await fetch('https://wallet-user-api.test.thekredibank.com/api/onboarding/v2/validate', {
-            method: 'POST',
-            body: JSON.stringify(customerData),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
-                'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
-            },
-        })
-        const data = await response.json();
-        return data;
-    } catch(err) {
-        console.log(err);
+        method: 'POST',
+        body: JSON.stringify(customerData),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer 409|oBrsHQfmhKhh3kUShgvPU1My92PQTMlIURHnVFek',
+            'uuid': '6c0334ae-8865-4a5d-8461-84db11ce7e74'
+        },
+    })
+    const data = await response.json();
+    return data;
+} catch(err) {
+    console.log(err);
+}
+}
+
+export const verifyBVNFromNibss = async () => {
+    try {
+        const response = await fetch('https://identity-pass.test.thekredibank.com/api/bvn/authorize', {
+        method: 'GET',
+        body: JSON.stringify(),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    const data = await response.json();
+    return data;
+} catch(err) {
+    console.log(err);
+}
+}
+
+export const verifyUserBVNDetails = async (bvn) => {
+    const payload = {
+        bvn: bvn
     }
+    try {
+        const response = await fetch('https://identity-pass.test.thekredibank.com/api/bvn/verify-bvn', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer AUvI0c0G6mUE8WaFo6yUOFPq016hZHcrenLhNbySzb3UAOziF-LrFD5FlNRBhC5uY3p0Zw~7y_fKcJKEWA5KaXg-b942-19c2aede&reK73I9pnjyXDBiM6R',
+        },
+    })
+    const data = await response.json();
+    return data;
+} catch(err) {
+    console.log(err);
+}
 }
 
 export const redirectToLogin = () => {
@@ -149,3 +185,5 @@ export const redirectToLogin = () => {
 export const redirectToTerms = () => {
     window.location.href = "https://www.google.com";
 }
+
+// https://identity-pass.test.thekredibank.com/api/bvn/verify-bvn
