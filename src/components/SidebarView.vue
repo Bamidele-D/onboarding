@@ -1,5 +1,5 @@
 <template>
-    <div class="w-80 h-screen bg-[#0F0B3B] py-10 px-14">
+    <div class="hidden lg:block w-80 h-screen bg-[#0F0B3B] py-10 px-14">
         <img src="../assets/images/white-logo.png" alt="Kredi" class="h-[30px]">
         <div class="mt-12">
             <ul>
