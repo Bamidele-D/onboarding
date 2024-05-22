@@ -5,7 +5,7 @@
                 <path d="M12 20.3389L4 12.3389M4 12.3389L12 4.33887M4 12.3389H18.5" stroke="#111111" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
             </svg>
         </span>
-        <div v-if="isBvnVerified">
+        <div v-if="!isBvnVerified">
             <div class="w-full" v-if="isBVN">
                 <div>
                     <h1 class="text-3xl font-bold mt-4">BVN Validation</h1>
@@ -185,13 +185,14 @@ const sendUserBvnOtp = async () => {
                 const newWindow = window.open(response.data.consent_url, '_blank', 'width=600,height=400');
                 if (newWindow) {
                     newWindow.focus();
-                }
-                setTimeout(()=> {
-                    if(newWindow) {
-                        newWindow.close();
+                    const checkIfClosed = () => {
+                    if (newWindow.closed) {
+                        clearInterval(interval);
                         verifyBVNDetails();
                     }
-                }, 30000);
+                };
+                const interval = setInterval(checkIfClosed, 1000); 
+                }
             }
             else {
                 toast.error("Invalid verification");
