@@ -10,15 +10,16 @@
       </div>
       <GetStarted :accountType="accountType" :selectAccountType="selectAccountType" :increaseIndex="increaseIndex"  v-if="progressIndex == 0" :decreaseIndex="decreaseIndex" />
       
-      <CustomerDetails :accountType="accountType" :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 1" :decreaseIndex="decreaseIndex" />
+      <CustomerDetails :accountType="accountType" :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 1" :decreaseIndex="decreaseIndex" :redirectLink="redirectLink" :token="token" :apikey="apikey" />
       
-      <OTPView :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 2" :decreaseIndex="decreaseIndex" />
+      <OTPView :personalData="personalData" :increaseIndex="increaseIndex" v-if="progressIndex == 2" :decreaseIndex="decreaseIndex" :token="token" :apikey="apikey" />
       
-      <BVNVerification  :personalData="personalData" :increaseIndex="increaseIndex" :accountType="accountType" :progressIndex="progressIndex" :totalProgressIndex="totalProgressIndex" v-if="progressIndex == 3" :decreaseIndex="decreaseIndex" />
+      <BVNVerification  :personalData="personalData" :increaseIndex="increaseIndex" :accountType="accountType" :progressIndex="progressIndex" :totalProgressIndex="totalProgressIndex" v-if="progressIndex == 3" :decreaseIndex="decreaseIndex" :token="token" :apikey="apikey" :bvntoken="bvntoken" />
+
       <BusinessRegistration :personalData="personalData" :businessData="businessData" :increaseIndex="increaseIndex" :decreaseIndex="decreaseIndex" 
-      v-if="showBusinessRegistration" />
+      v-if="showBusinessRegistration" :token="token" :apikey="apikey" />
       
-      <RegistrationCompleted :resetData="resetData" v-if="showRegistrationCompleted" />
+      <RegistrationCompleted :resetData="resetData" :redirectLink="redirectLink" v-if="showRegistrationCompleted" />
     </div>
   </div>
 </template>
@@ -26,13 +27,31 @@
 <script setup>
 import { ref, computed } from "vue";
 import SidebarView from "../components/SidebarView.vue";
-import ContentArea from "../components/ContentArea.vue";
 import GetStarted from "../components/GetStarted.vue";
 import CustomerDetails from "../components/CustomerDetails.vue";
 import OTPView from "../components/OTPView.vue";
 import BVNVerification from "../components/BVNVerification.vue";
 import BusinessRegistration from "../components/BusinessRegistration.vue";
 import RegistrationCompleted from "../components/RegistrationCompleted.vue";
+const props = defineProps({
+  redirectLink: {
+    type: String,
+    required: true,
+  },
+  apikey: {
+    type: String,
+    required: true,
+  },
+  token: {
+    type: String,
+    required: true,
+  },
+  bvntoken: {
+    type: String,
+    required: true,
+  },
+});
+
 
 const accountType = ref("");
 const  progressIndex = ref(0);

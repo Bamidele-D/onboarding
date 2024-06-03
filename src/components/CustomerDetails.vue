@@ -58,7 +58,7 @@
                 </div>
             </form>
             <div>
-                <p class="text-center text-sm mt-5">Already have an account? <span class="text-red-500 font-bold cursor-pointer" @click="redirectToLogin()">Log In</span></p>
+                <p class="text-center text-sm mt-5">Already have an account? <a class="text-red-500 font-bold cursor-pointer" :href="redirectLink">Log In</a></p>
             </div>
         </div>
     </div>
@@ -66,11 +66,39 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { sendOTP, redirectToLogin, redirectToTerms, verifyCustomer } from "../services";
+import { sendOTP, redirectToTerms, verifyCustomer } from "../services";
 import { numbersOnly } from "../helpers";
-const props = defineProps([
-'personalData', 'increaseIndex', 'decreaseIndex', 'accountType'
-]);
+const props = defineProps({
+    personalData: {
+        type: Object,
+        required: true,
+    },
+    increaseIndex: {
+        type: Function,
+        required: true,
+    },
+    decreaseIndex: {
+        type: Function,
+        required: true,
+    },
+    accountType: {
+        type: String,
+        required: true,
+    },
+    redirectLink: {
+        type: String,
+        required: true,
+    },
+    apikey: {
+        type: String,
+        required: true,
+    },
+    token: {
+        type: String,
+        required: true,
+    }
+});
+
 import { createToaster } from '@meforma/vue-toaster';
 const toast = createToaster({ position: 'top-right' });
 
@@ -137,9 +165,8 @@ const verifyCustomerData = async () => {
             email: props.personalData.email,
             phone: props.personalData.phone
         }
-        const response = await verifyCustomer(payload);
+        const response = await verifyCustomer(payload, props.apikey, props.token);
         loading.value = false;
-        console.log(response.data);
         if (props.accountType === 'personal') {
             if (response.data.email && response.data.phone) {
                 toast.error("Email address and Phone number exists");
@@ -170,7 +197,7 @@ const verifyCustomerData = async () => {
 const sendUserOTP = async () => {
     try {
         loading.value = true;
-        const response = await sendOTP(props.personalData.email, props.personalData.phone);
+        const response = await sendOTP(props.personalData.email, props.personalData.phone, props.apikey, props.token);
         toast.success(response.message);
         loading.value = false;
         if(response.status == 200) {

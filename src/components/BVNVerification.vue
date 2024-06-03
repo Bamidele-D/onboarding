@@ -22,21 +22,23 @@
                         
                         <div>
                             <button class="bg-[#1C2C35] h-[60px] w-full text-white font-semibold rounded-lg"
-                            @click.prevent="sendUserBvnOtp()">{{ loading ? 'Please wait...' : 'Verify BVN'
-                        }}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        
-        <div class="w-full" v-else>
-            <div>
-                <h1 class="text-3xl font-bold">Enter the code</h1>
-                <p class="text-[#494D4F] text-sm">Enter the OTP code sent to your phone, be careful not to share the
-                    code
-                    with anyone.</p>
+                                @click.prevent="sendUserBvnOtp()">
+                                {{ loading ? 'Please wait...' : 'Verify BVN'}}
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                
+            </div>
+        
+            <div class="w-full" v-else>
+                <div>
+                    <h1 class="text-3xl font-bold">Enter the code</h1>
+                    <p class="text-[#494D4F] text-sm">Enter the OTP code sent to your phone, be careful not to share the
+                        code
+                        with anyone.
+                    </p>
+                </div>
+                    
                 <div class="mt-20">
                     <form action="">
                         <div class="flex justify-center gap-5 mb-5">
@@ -60,36 +62,68 @@
                         
                         <div class="flex justify-center">
                             <button class="h-[60px] w-[70%] text-white font-semibold rounded-lg" :class="{'bg-[#1C2C3580] cursor-not-allowed' : otp.length !== 6, 'bg-[#1C2C35]': otp.length == 6}" :disabled="otp.length !== 6" 
-                            @click.prevent="verifyUserBvnOtp()">{{ loading ? 'Please wait...' : 'Verify BVN'
-                        }}</button>
-                    </div>
-                </form>
+                                @click.prevent="verifyUserBvnOtp()">
+                                {{ loading ? 'Please wait...' : 'Verify BVN'}}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
     
-    <div class="flex justify-center" v-else>
-        <button class="bg-[#1C2C35] h-[60px] w-[70%] text-white font-semibold rounded-lg"
-        @click.prevent="openBVNPortal()">
-        {{ loading ? 'Please wait...' : 'Verify BVN with NIBSS'}}
-    </button>
-</div>
-</div>
+        <div class="flex justify-center" v-else>
+            <button class="bg-[#1C2C35] h-[60px] w-[70%] text-white font-semibold rounded-lg"
+                @click.prevent="openBVNPortal()">
+                {{ loading ? 'Please wait...' : 'Verify BVN with NIBSS'}}
+            </button>
+        </div>
+    </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { sendBvnOtp, verifyBVN, createCustomer, verifyBVNFromNibss, verifyUserBVNDetails } from "../services";
 import { createToaster } from '@meforma/vue-toaster';
 const toast = createToaster({ position: 'top-right' });
 
-const props = defineProps([
-'personalData', 
-'increaseIndex', 
-'accountType', 
-'progressIndex', 
-'totalProgressIndex', 'decreaseIndex'
-]);
+const props = defineProps({
+    personalData: {
+        type: Object,
+        required: true,
+    },
+    increaseIndex: {
+        type: Function,
+        required: true,
+    },
+    decreaseIndex: {
+        type: Function,
+        required: true,
+    },
+    accountType: {
+        type: String,
+        required: true,
+    },
+    progressIndex: {
+        type: Number,
+        required: true,
+    },
+    totalProgressIndex: {
+        type: Number,
+        required: true,
+    },
+    apikey: {
+        type: String,
+        required: true,
+    },
+    token: {
+        type: String,
+        required: true,
+    },
+    bvntoken: {
+        type: String,
+        required: true,
+    },
+});
 
 const loading = ref(false);
 const isBVN = ref(true);
@@ -108,19 +142,15 @@ const handleOnComplete = (e) => {
 const sendUserBvnOtp = async () => {
     try {
         loading.value = true;
-        const response = await sendBvnOtp(props.personalData.bvn);
-        loading.value = false;
+        const response = await sendBvnOtp(props.personalData.bvn, props.apikey, props.token);
         if(response.status == 200) {
             toast.success(response.message);
             isBVN.value = false;
         }
         if(response.status == 404) {
             toast.error(response.message);
-            isBvnVerified.value = false;
+            openBVNPortal()
         }
-        // if (response.status == 200) {
-            //     props.increaseIndex();
-            // }
         } catch (err) {
             loading.value = false;
             console.log(err)
@@ -131,7 +161,7 @@ const sendUserBvnOtp = async () => {
     const handleResendOTP = async () => {
         try {
             isResend.value = true;
-            const response = await sendBvnOtp(props.personalData.bvn);
+            const response = await sendBvnOtp(props.personalData.bvn, props.apikey, props.token);
             toast.success(response.message);
             isResend.value = false;
         } catch(err) {
@@ -144,7 +174,7 @@ const sendUserBvnOtp = async () => {
     const verifyUserBvnOtp = async () => {
         try {
             loading.value = true;
-            const response = await verifyBVN(props.personalData.bvn, otp.value);
+            const response = await verifyBVN(props.personalData.bvn, otp.value, props.apikey, props.token);
             loading.value = false;
             if(response.status == 200) {
                 createCustomerAccount();
@@ -161,7 +191,7 @@ const sendUserBvnOtp = async () => {
         }
         try {
             loading.value = true;
-            const response = await createCustomer(payload);
+            const response = await createCustomer(payload, props.apikey, props.token);
             loading.value = false;
             if(response.status == 200) {
                 toast.success(response.message);
@@ -180,9 +210,7 @@ const sendUserBvnOtp = async () => {
         try {
             loading.value = true;
             const response = await verifyBVNFromNibss();
-            console.log(response.data);
             if(response.data) {
-                console.log(response.data.consent_url);
                 const newWindow = window.open(response.data.consent_url, '_blank', 'width=600,height=400');
                 if (newWindow) {
                     newWindow.focus();
@@ -207,9 +235,8 @@ const sendUserBvnOtp = async () => {
     const verifyBVNDetails = async () => {
         try {
             loading.value = true;
-            const response = await verifyUserBVNDetails(props.personalData.bvn);
+            const response = await verifyUserBVNDetails(props.personalData.bvn, props.bvntoken);
             loading.value = false;
-            console.log(response);
             if(response.success) {
                 toast.success(response.message || "BVN successfully verified");
                 props.increaseIndex();

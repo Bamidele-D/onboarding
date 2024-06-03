@@ -87,9 +87,32 @@ import { createBusiness } from "../services";
 import { createToaster } from '@meforma/vue-toaster';
 const toast = createToaster({ position: 'top-right' });
 
-const props = defineProps([
-    'businessData', 'personalData', 'increaseIndex', 'decreaseIndex'
-]);
+const props = defineProps({
+    businessData: {
+        type: Object,
+        required: true,
+    },
+    personalData: {
+        type: Object,
+        required: true,
+    },
+    increaseIndex: {
+        type: Function,
+        required: true,
+    },
+    decreaseIndex: {
+        type: Function,
+        required: true,
+    },
+    apikey: {
+        type: String,
+        required: true,
+    },
+    token: {
+        type: String,
+        required: true,
+    },
+});
 
 const dateInput = ref(null);
 
@@ -136,12 +159,10 @@ const createBusinessAccount = async () => {
     const payload = {
         ...props.personalData, ...props.businessData
     }
-    console.log(payload);
     try {
         loading.value = true;
         
-        const response = await createBusiness(payload);
-        console.log(response);
+        const response = await createBusiness(payload, props.apikey, props.token);
         loading.value = false;
         if (response.status == 200) {
             toast.success(response.message);

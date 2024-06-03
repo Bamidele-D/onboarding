@@ -43,9 +43,29 @@
     <script setup>
     import { ref } from "vue";
     import { verifyOTP, sendOTP } from "../services";
-    const props = defineProps([
-    'personalData', 'increaseIndex', 'decreaseIndex'
-    ]);
+    const props = defineProps({
+        personalData: {
+            type: Object,
+            required: true,
+        },
+        increaseIndex: {
+            type: Function,
+            required: true,
+        },
+        decreaseIndex: {
+            type: Function,
+            required: true,
+        },
+        apikey: {
+            type: String,
+            required: true,
+        },
+        token: {
+            type: String,
+            required: true,
+        },
+    });
+    
     import { createToaster } from '@meforma/vue-toaster';
     const toast = createToaster({ position: 'top-right' });
     
@@ -64,7 +84,7 @@
     const verifyUserOTP = async () => {
         try {
             loading.value = true;
-            const response = await verifyOTP(props.personalData.email, props.personalData.phone, otp.value);
+            const response = await verifyOTP(props.personalData.email, props.personalData.phone, otp.value, props.apikey, props.token);
             loading.value = false;
             if (response.status == 200) {
                 toast.success(response.message);
@@ -83,42 +103,42 @@
     const handleResendOTP = async () => {
         try {
             isResend.value = true;
-            const response = await sendOTP(props.personalData.email, props.personalData.phone);
+            const response = await sendOTP(props.personalData.email, props.personalData.phone, props.apikey, props.token);
             toast.success(response.message);
             isResend.value = false;
-            } catch(err) {
-                isResend.value = false;
-                console.log(err)
-                toast.error(err.response.data.message || err.response.message);
-            }
+        } catch(err) {
+            isResend.value = false;
+            console.log(err)
+            toast.error(err.response.data.message || err.response.message);
         }
-    </script>
+    }
+</script>
+
+<style>
+.one,
+.two,
+.three,
+.four,
+.five,
+.six {
+    width: 56px;
+    height: 56px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-weight: 300;
+}
+
+@media screen and (max-width: 640px) {
     
-    <style>
     .one,
     .two,
     .three,
     .four,
     .five,
     .six {
-        width: 56px;
-        height: 56px;
-        text-align: center;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-weight: 300;
+        width: 46px;
+        height: 46px;
     }
-    
-    @media screen and (max-width: 640px) {
-        
-        .one,
-        .two,
-        .three,
-        .four,
-        .five,
-        .six {
-            width: 46px;
-            height: 46px;
-        }
-    }
+}
 </style>

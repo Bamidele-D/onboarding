@@ -48,12 +48,24 @@
 </template>
 
 <script setup>
-const props = defineProps([
-    'accountType', 
-    'selectAccountType', 
-    'increaseIndex',
-    'decreaseIndex'
-]);
+const props = defineProps({
+    accountType: {
+        type: String,
+        required: true,
+    },
+    selectAccountType: {
+        type: Function,
+        required: true,
+    },
+    increaseIndex: {
+        type: Function,
+        required: true,
+    },
+    decreaseIndex: {
+        type: Function,
+        required: true,
+    },
+});
 </script>
 
 <style>

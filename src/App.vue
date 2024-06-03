@@ -1,7 +1,11 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
-  <RouterView />
+  <kredi-auth 
+  redirectLink="" 
+  :apikey="''"
+  :token="''"
+  :bvntoken="''">
+  </kredi-auth>
 </template>

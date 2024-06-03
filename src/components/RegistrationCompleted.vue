@@ -9,7 +9,7 @@
             <h1 class="text-2xl font-bold mt-5 text-center">Registration Completed</h1>
             
             <div class="mt-10 flex items-center justify-center">
-                <button class="bg-[#1C2C35] h-[50px] w-[60%] text-white font-semibold rounded-lg" @click.prevent="resetData(); redirectToLogin()">Go to Login</button>
+                <button class="bg-[#1C2C35] h-[50px] w-[60%] text-white font-semibold rounded-lg" @click.prevent="resetData(); redirectToLogin(redirectLink)">Go to Login</button>
             </div>
         </div>
     </div>
@@ -17,7 +17,14 @@
 
 <script setup>
 import { redirectToLogin } from "../services";
-const props = defineProps([
-    'resetData',
-]);
+const props = defineProps({
+    resetData: {
+        type: Function,
+        required: true,
+    },
+    redirectLink: {
+        type: String,
+        required: true
+    }
+})
 </script>
